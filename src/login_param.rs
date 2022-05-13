@@ -142,7 +142,7 @@ pub struct LoginParam {
 impl LoginParam {
     /// Load entered (candidate) account settings
     pub async fn load_candidate_params(context: &Context) -> Result<Self> {
-        let mut param = Self::load_invalid_candidate_params(context).await?;
+        let mut param = Self::load_candidate_params_unchecked(context).await?;
         ensure!(!param.addr.is_empty(), "Missing email address.");
 
         // Only check for IMAP password, SMTP password is an "advanced" setting.
@@ -158,7 +158,7 @@ impl LoginParam {
     /// This will result in a potentially invalid [`LoginParam`] struct as the values are
     /// not validated.  Only use this if you want to show this directly to the user e.g. in
     /// [`Context::get_info`].
-    pub async fn load_invalid_candidate_params(context: &Context) -> Result<Self> {
+    pub async fn load_candidate_params_unchecked(context: &Context) -> Result<Self> {
         LoginParam::from_database(context, "").await
     }
 
