@@ -145,7 +145,6 @@ impl Context {
 async fn configure(ctx: &Context, param: &mut LoginParam) -> Result<()> {
     progress!(ctx, 1);
 
-    // TODO: check if clone is needed
     let socks5_config = param.socks5_config.clone();
     let socks5_enabled = socks5_config.is_some();
 
