@@ -1030,9 +1030,12 @@ impl Imap {
             .await?;
 
         self.prepare(context).await?;
-        self.select_folder(context, Some(folder)).await?;
 
         for (target, rowid_set, uid_set) in UidGrouper::from(rows) {
+            // Select folder inside the loop to avoid selecting it if there are no pending
+            // MOVE/DELETE operations.
+            self.select_folder(context, Some(folder)).await?;
+
             // Empty target folder name means messages should be deleted.
             if target.is_empty() {
                 self.delete_message_batch(context, &uid_set, rowid_set)
